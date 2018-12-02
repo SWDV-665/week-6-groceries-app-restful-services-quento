@@ -8,11 +8,11 @@
   <ion-fab top right edge>
     <button (click)="addItem()" ion-fab mini><ion-icon name="add"></ion-icon></button>    
   </ion-fab>
-  <h3 text-center *ngIf="loadItems().length === 0">
+  <h3 text-center *ngIf="items.length === 0">
     <em>No items on the list.</em> <ion-icon name="sad"></ion-icon>
   </h3>
   <ion-list>  
-    <ion-item-sliding *ngFor="let item of loadItems(); let i = index">
+    <ion-item-sliding *ngFor="let item of items; let i = index">
       <ion-item>          
         <h2>{{item.name}}</h2>
         <p><em>Qty:</em> {{item.quantity}}</p>
@@ -26,7 +26,7 @@
           <ion-icon name="share"></ion-icon>
           Share
         </button>
-        <button (click)="removeItem(item, i)" ion-button color="danger" icon-start>
+        <button (click)="removeItem(item,_id)" ion-button color="danger" icon-start>
           <ion-icon name="trash"></ion-icon>
           Delete
         </button>                  
