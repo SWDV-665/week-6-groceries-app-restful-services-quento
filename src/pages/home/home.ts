@@ -14,31 +14,43 @@ export class HomePage {
 
   title = "Grocery";
 
+  items = [];
+  errorMessage: string;
 
   constructor(public navCtrl: NavController, public toastCtrl: ToastController, public alertCtrl: AlertController, public dataService: GroceriesServiceProvider, public dialogService: InputDialogServiceProvider, public socialSharing: SocialSharing) {
+    // Subscribing to observable to know when data changes.
+    dataService.dataChanged$.subscribe((dataChanged: boolean) => {
+      this.loadItems();
+    });
+  }
 
+  ionViewDidLoad(){
+    this.loadItems();
   }
 
   // Get initial groceries list from provider.
   loadItems(){
-    return this.dataService.getItems();
+    this.dataService.getItems()
+      .subscribe(
+        items => this.items = items,
+        error => this.errorMessage = <any>error
+      );
   }
 
-  removeItem(item, index){
+  removeItem(item, id){
     // Show action notification
-    this.showToast("Remove", item, index);
+    this.showToast("Remove", item, id);
 
     // Use Groceries Provider to remove item
-    this.dataService.removeItem(index);    
+    this.dataService.removeItem(item._id);    
   }
 
   shareItem(item, index){
-    
-
+    console.log("Shared successfully");
     let message = "Grocery Item - Name: " + item.name + " - Quantity: " + item.quantity;
     let subject = "Shared via Grocery app";
     // Share an item    
-    this.socialSharing.share().then(() => {
+    this.socialSharing.share(message,subject).then(() => {
       console.log("Shared successfully");
       // Show action notification
       this.showToast("Shared successfully", item, index);
@@ -54,7 +66,7 @@ export class HomePage {
     this.showToast("Edit", item, index);
 
     // Delete item from items array    
-    this.dialogService.showPrompt(item, index);
+    this.dialogService.showPrompt(item, index, item._id);
   }
 
   addItem(){
@@ -62,9 +74,9 @@ export class HomePage {
     this.dialogService.showPrompt();   
   }
 
-  showToast(itemAction, itemObj, index){
+  showToast(itemAction, itemObj, id){
     // Show a toast message to Troubleshoot action occurrance.
-    console.log(itemAction + " item .." , index);
+    console.log(itemAction + " item .." , id, itemObj._id);
     
     // Show item action message (toast)
     const toast = this.toastCtrl.create({
