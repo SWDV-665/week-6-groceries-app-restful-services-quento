@@ -15,9 +15,8 @@ export class InputDialogServiceProvider {
     console.log('Hello InputDialogServiceProvider Provider');
   }
 
-  qty = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-
-  showPrompt(item?, index?) {
+  
+  showPrompt(item?, index?,id?) {
     const prompt = this.alertCtrl.create({
       title: item ? 'Edit Item' : 'Add Item',
       message: item ? "Please edit an item" : 'Pleas add an item',
@@ -43,10 +42,10 @@ export class InputDialogServiceProvider {
         {
           text: 'Save',
           handler: item => {
-            console.log('Saved clicked', item);    
+            console.log('Saved clicked', item, id);    
             if (index !== undefined){
               // Edit item to array
-              this.dataService.editItem(item,index);
+              this.dataService.editItem(item,id);
             } else {
               // Add item to array
               this.dataService.addItem(item);
